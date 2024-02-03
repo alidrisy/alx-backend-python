@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """ Model for client model methods """
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
-from typing import Callable, Mapping, Sequence
+from typing import Callable, Mapping
+from fixtures import TEST_PAYLOAD
 from unittest.mock import patch, PropertyMock
 import unittest
 
@@ -58,6 +59,45 @@ class TestGithubOrgClient(unittest.TestCase):
         """ Test that the result of has_license is the expected result """
         res = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(res, result)
+
+
+@parameterized_class(('org_payload', 'repos_payload', 'expected_repos',
+                      'apache2_repos'), TEST_PAYLOAD)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Test the GithubOrgClient.public_repos method in an integration test."""
+
+    @classmethod
+    def setUpClass(self):
+        """ Set up elements """
+        self.patcher = patch("requests.get")
+        self.get_patcher = self.patcher.start()
+        self.mock_json = self.get_patcher.return_value
+        def side_effect(args):
+            if args == "https://api.github.com/orgs/google":
+                self.mock_json.json.return_value = self.org_payload
+                return self.get_patcher.return_value
+            elif args == "https://api.github.com/orgs/google/repos":
+                self.mock_json.json.return_value = self.repos_payload
+                return self.get_patcher.return_value
+        self.get_patcher.side_effect = side_effect
+        
+
+    @classmethod
+    def tearDownClass(self):
+        """ Tear down elements """
+        self.patcher.stop()
+
+    def test_public_repos_no_lic(self):
+        """Test the public_repos method with None license"""
+        git_hub_org = GithubOrgClient("google")
+        result = git_hub_org.public_repos()
+        self.assertEqual(result, self.expected_repos)
+
+    def test_public_repos_lic(self):
+        """Test the public_repos method with license"""
+        git_hub_org = GithubOrgClient("google")
+        result = git_hub_org.public_repos("apache-2.0")
+        self.assertEqual(result, self.apache2_repos)
 
 
 if __name__ == "__main__":
