@@ -72,6 +72,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.get_patcher = patch("requests.get")
         self.mock_patcher = self.get_patcher.start()
         self.mock_json = self.mock_patcher.return_value
+
         def side_effect(args):
             if args == "https://api.github.com/orgs/google":
                 self.mock_json.json.return_value = self.org_payload
@@ -80,7 +81,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                 self.mock_json.json.return_value = self.repos_payload
                 return self.mock_patcher.return_value
         self.mock_patcher.side_effect = side_effect
-        
 
     @classmethod
     def tearDownClass(self):
