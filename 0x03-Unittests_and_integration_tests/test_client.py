@@ -40,24 +40,24 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @parameterized.expand([
         ("https://api.github.com/orgs/alx",
-         [{"repos_url": "https://api.github.com/orgs/alx", "name": "alx"}],
-          ["alx"]),
+         [{"name": "alx"}],
+         ["alx"], None),
         ("https://api.github.com/orgs/abc",
-         [{"repos_url": "https://api.github.com/orgs/abc", "name": "abc"}],
-          ["abc"])
+         [{"license": {"key": "abc_license"}, "name": "abc"}],
+         ["abc"], "abc_license")
     ])
     @patch("client.get_json")
     def test_public_repos(self, repos_url: str, repos: Sequence,
-                          result: Sequence, get_json: Callable):
+                          result: Sequence, license: str, get_json: Callable):
         """test that GithubOrgClient.public_repos returns the correct value."""
         with patch.object(GithubOrgClient, "_public_repos_url",
                           new_callable=PropertyMock) as _public_repos_url:
             _public_repos_url.return_value = repos_url
             git_hub_org = GithubOrgClient(result[0])
             get_json.return_value = repos
-            resp = git_hub_org.public_repos()
+            resp = git_hub_org.public_repos(license)
             self.assertEqual(resp, result)
-            git_hub_org.public_repos()
+            git_hub_org.public_repos(license)
             _public_repos_url.assert_called_once()
             get_json.assert_called_once()
 
