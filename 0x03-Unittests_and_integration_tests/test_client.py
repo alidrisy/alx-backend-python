@@ -15,14 +15,14 @@ class TestGithubOrgClient(unittest.TestCase):
         ("abc", {"payload": False}),
     ])
     @patch("client.get_json")
-    def test_org(self, org_name: str, result: Mapping, mock_get_json: Callable):
+    def test_org(self, org_name: str, result: Mapping, mock_get_jsn: Callable):
         """test that GithubOrgClient.org returns the correct value."""
-        mock_get_json.return_value = result
+        mock_get_jsn.return_value = result
         git_hub_org = GithubOrgClient(org_name)
         resp = git_hub_org.org
         self.assertEqual(result, resp)
         resp = git_hub_org.org
-        mock_get_json.assert_called_once()
+        mock_get_jsn.assert_called_once()
 
     @parameterized.expand([
         ("google", {"repos_url": "https://api.github.com/orgs/google"}),
