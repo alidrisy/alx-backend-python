@@ -69,23 +69,23 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         """ Set up elements """
-        self.patcher = patch("requests.get")
-        self.get_patcher = self.patcher.start()
-        self.mock_json = self.get_patcher.return_value
+        self.get_patcher = patch("requests.get")
+        self.mock_patcher = self.get_patcher.start()
+        self.mock_json = self.mock_patcher.return_value
         def side_effect(args):
             if args == "https://api.github.com/orgs/google":
                 self.mock_json.json.return_value = self.org_payload
-                return self.get_patcher.return_value
+                return self.mock_patcher.return_value
             elif args == "https://api.github.com/orgs/google/repos":
                 self.mock_json.json.return_value = self.repos_payload
-                return self.get_patcher.return_value
-        self.get_patcher.side_effect = side_effect
+                return self.mock_patcher.return_value
+        self.mock_patcher.side_effect = side_effect
         
 
     @classmethod
     def tearDownClass(self):
         """ Tear down elements """
-        self.patcher.stop()
+        self.get_patcher.stop()
 
     def test_public_repos_no_lic(self):
         """Test the public_repos method with None license"""
