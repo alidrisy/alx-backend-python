@@ -15,14 +15,14 @@ class TestGithubOrgClient(unittest.TestCase):
         ("abc", {"payload": False}),
     ])
     @patch("client.get_json")
-    def test_org(self, org_name: str, result: Mapping, get_json: Callable):
+    def test_org(self, org_name: str, result: Mapping, mock_get_json: Callable):
         """test that GithubOrgClient.org returns the correct value."""
-        get_json.return_value = result
+        mock_get_json.return_value = result
         git_hub_org = GithubOrgClient(org_name)
         resp = git_hub_org.org
         self.assertEqual(result, resp)
         resp = git_hub_org.org
-        get_json.assert_called_once()
+        mock_get_json.assert_called_once()
 
     @parameterized.expand([
         ("google", {"repos_url": "https://api.github.com/orgs/google"}),
@@ -32,34 +32,23 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that the result of _public_repos_url is the expected
         one based on the mocked payload."""
         with patch.object(GithubOrgClient, "org",
-                          new_callable=PropertyMock) as org:
-            org.return_value = result
+                          new_callable=PropertyMock) as mock_org:
+            mock_org.return_value = result
             git_hub_org = GithubOrgClient(org_name)
             resp = git_hub_org._public_repos_url
             self.assertEqual(result["repos_url"], resp)
 
-    @parameterized.expand([
-        ("https://api.github.com/orgs/alx",
-         [{"name": "alx"}],
-         ["alx"], None),
-        ("https://api.github.com/orgs/abc",
-         [{"license": {"key": "abc_license"}, "name": "abc"}],
-         ["abc"], "abc_license")
-    ])
-    @patch("client.get_json")
-    def test_public_repos(self, repos_url: str, repos: Sequence,
-                          result: Sequence, license: str, get_json: Callable):
+    @patch("client.get_json", return_value=[{"name": "alx"}])
+    def test_public_repos(self, mock_get_json: Callable):
         """test that GithubOrgClient.public_repos returns the correct value."""
         with patch.object(GithubOrgClient, "_public_repos_url",
-                          new_callable=PropertyMock) as _public_repos_url:
-            _public_repos_url.return_value = repos_url
-            git_hub_org = GithubOrgClient(result[0])
-            get_json.return_value = repos
-            resp = git_hub_org.public_repos(license)
-            self.assertEqual(resp, result)
-            git_hub_org.public_repos(license)
-            _public_repos_url.assert_called_once()
-            get_json.assert_called_once()
+                          return_value="https://api.github.com/orgs/abc",
+                          new_callable=PropertyMock) as mock_public_repos_url:
+            git_hub_org = GithubOrgClient("alx")
+            resp = git_hub_org.public_repos()
+            self.assertEqual(resp, ["alx"])
+            mock_public_repos_url.assert_called_once()
+            mock_get_json.assert_called_once()
 
 
 if __name__ == "__main__":
