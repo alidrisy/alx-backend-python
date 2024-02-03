@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-""" Model for TestAccessNestedMap object """
+""" Model for utils model methods """
 from parameterized import parameterized
-from utils import access_nested_map, get_json
+from utils import access_nested_map, get_json, memoize
 from typing import Mapping, Sequence, Any
 from unittest.mock import patch
 import unittest
@@ -47,6 +47,28 @@ class TestGetJson(unittest.TestCase):
 
             mock_get.assert_called_once_with(test_url)
             self.assertEqual(result, test_payload)
+
+
+class TestMemoize(unittest.TestCase):
+    """Class to test utils memoize method """
+
+    def test_memoize(self):
+        """test that when calling a_property twice, the correct result is
+        returned but a_method is only called once using assert_called_once."""
+        class TestClass:
+
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        with patch.object(TestClass, "a_method") as a_method:
+            test_class = TestClass()
+            test_class.a_property()
+            test_class.a_property()
+            a_method.assert_called_once()
 
 
 if __name__ == "__main__":
