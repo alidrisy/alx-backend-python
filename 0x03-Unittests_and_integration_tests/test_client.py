@@ -87,13 +87,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """ Tear down elements """
         self.get_patcher.stop()
 
-    def test_public_repos_no_lic(self):
+    def test_public_repos(self):
         """Test the public_repos method with None license"""
         git_hub_org = GithubOrgClient("google")
         result = git_hub_org.public_repos()
         self.assertEqual(result, self.expected_repos)
 
-    def test_public_repos_lic(self):
+    def test_public_repos_with_license(self):
         """Test the public_repos method with license"""
         git_hub_org = GithubOrgClient("google")
         result = git_hub_org.public_repos("apache-2.0")
