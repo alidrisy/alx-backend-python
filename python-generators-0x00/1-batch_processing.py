@@ -16,7 +16,7 @@ def stream_users_in_batches(batch_size):
     connection = mysql.connector.connect(
         host="localhost",  # or your MySQL server IP
         user="root",  # your MySQL username
-        password="abd727868",  # your MySQL password
+        password="pwd",  # your MySQL password
         database="ALX_prodev",
     )
     cursor = connection.cursor(dictionary=True)
