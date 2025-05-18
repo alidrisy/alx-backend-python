@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import seed
-from itertools import islice
 
 
 def stream_users_in_batches(batch_size):
@@ -20,6 +19,6 @@ def stream_users_in_batches(batch_size):
 def batch_processing(batch_size):
     batches = stream_users_in_batches(batch_size)
     for batch in batches:
-        for user in islice(batch, 6):
+        for user in batch:
             if user.get("age", 0) > 25:
                 print(user)
