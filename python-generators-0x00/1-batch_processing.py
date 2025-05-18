@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Module for streaming users in batches from a MySQL database and processing them."""
-import mysql.connector
+
+import seed
 
 
 def stream_users_in_batches(batch_size):
@@ -13,12 +14,7 @@ def stream_users_in_batches(batch_size):
     Yields:
     list: A list of dictionaries representing user data in each batch.
     """
-    connection = mysql.connector.connect(
-        host="localhost",  # or your MySQL server IP
-        user="root",  # your MySQL username
-        password="pwd",  # your MySQL password
-        database="ALX_prodev",
-    )
+    connection = seed.connect_to_prodev()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM user_data")
     while True:
@@ -37,9 +33,6 @@ def batch_processing(batch_size):
 
     Args:
     batch_size (int): The size of each batch for processing users.
-
-    Returns:
-    None
     """
     batches = stream_users_in_batches(batch_size)
     for batch in batches:
