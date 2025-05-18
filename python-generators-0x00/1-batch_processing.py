@@ -1,7 +1,22 @@
 #!/usr/bin/python3
 """Module for streaming users in batches from a MySQL database and processing them."""
+import mysql.connector
 
-import seed
+
+def connect_to_prodev():
+    """
+    Connects to the ALX_prodev database using MySQL.
+
+    Returns:
+    MySQL connection object: Connection to the ALX_prodev database.
+    """
+    conn = mysql.connector.connect(
+        host="localhost",  # or your MySQL server IP
+        user="root",  # your MySQL username
+        password="pwd",  # your MySQL password
+        database="ALX_prodev",
+    )
+    return conn
 
 
 def stream_users_in_batches(batch_size):
@@ -14,7 +29,7 @@ def stream_users_in_batches(batch_size):
     Yields:
     list: A list of dictionaries representing user data in each batch.
     """
-    connection = seed.connect_to_prodev()
+    connection = connect_to_prodev()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM user_data")
     while True:
