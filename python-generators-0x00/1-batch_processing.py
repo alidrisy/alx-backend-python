@@ -32,6 +32,15 @@ def stream_users_in_batches(batch_size):
 
 
 def batch_processing(batch_size):
+    """
+    Process users in batches based on the given batch size.
+
+    Args:
+    batch_size (int): The size of each batch for processing users.
+
+    Returns:
+    None
+    """
     batches = stream_users_in_batches(batch_size)
     for batch in batches:
         for user in batch:
