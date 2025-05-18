@@ -18,7 +18,7 @@ def connect_db():
     conn = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="abd727868",
+        password="pwd",
     )
     return conn
 
@@ -48,7 +48,7 @@ def connect_to_prodev():
     conn = mysql.connector.connect(
         host="localhost",  # or your MySQL server IP
         user="root",  # your MySQL username
-        password="abd727868",  # your MySQL password
+        password="pwd",  # your MySQL password
         database="ALX_prodev",
     )
     return conn
