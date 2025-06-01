@@ -26,7 +26,6 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [filters.DjangoFilterBackend]  # ✅ use filters
 
     def get_queryset(self):
         return Message.objects.filter(conversation__participants=self.request.user)
