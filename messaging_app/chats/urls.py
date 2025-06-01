@@ -1,14 +1,17 @@
-from rest_framework.routers import DefaultRouter
-from rest_framework_nested.routers import NestedDefaultRouter
+from django.urls import path, include  # ✅ استيراد path و include
+from rest_framework import routers  # ✅ استيراد DefaultRouter
+from rest_framework_nested.routers import NestedDefaultRouter  # ✅ في حال استخدام الراوتر المتداخل
 from .views import ConversationViewSet, MessageViewSet
 
-# Router الأساسي (يُسجّل المسارات العادية)
-router = DefaultRouter()
-router.register(r'conversations', ConversationViewSet, basename='conversation')
-router.register(r'messages', MessageViewSet, basename='message')
+# الراوتر الرئيسي
+router = routers.DefaultRouter()
+router.register(r"conversations", ConversationViewSet, basename="conversation")  # ✅ conversations
 
-# Router المتداخل (يُسجّل المسارات المتداخلة)
-nested_router = NestedDefaultRouter(router, r'conversations', lookup='conversation')
-nested_router.register(r'messages', MessageViewSet, basename='conversation-messages')
+# الراوتر المتداخل للرسائل ضمن المحادثات
+nested_router = NestedDefaultRouter(router, r"conversations", lookup="conversation")
+nested_router.register(r"messages", MessageViewSet, basename="conversation-messages")  # ✅ nested messages
 
-urlpatterns = router.urls + nested_router.urls
+urlpatterns = [
+    path("", include(router.urls)),
+    path("", include(nested_router.urls)),  # ✅ تضمين الراوتر المتداخل
+]
