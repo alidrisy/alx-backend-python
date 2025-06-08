@@ -1,10 +1,21 @@
-from rest_framework.permissions import BasePermission
+from rest_framework import permissions
 
-
-class IsOwner(BasePermission):
+class IsOwnerOrAdmin(permissions.BasePermission):
     """
-    Allows access only to the owner of the object.
+    Custom permission to only allow owners of a message/conversation to view or edit it.
+    Admins have full access.
     """
-
     def has_object_permission(self, request, view, obj):
-        return obj.user == request.user  # Or: obj.sender == request.user for messages
+        # Admin users have full access
+        if request.user.is_staff:
+            return True
+            
+        # Check if the object has a user field directly
+        if hasattr(obj, 'user'):
+            return obj.user == request.user
+            
+        # For conversations, check if user is a participant
+        if hasattr(obj, 'participants'):
+            return request.user in obj.participants.all()
+            
+        return False
