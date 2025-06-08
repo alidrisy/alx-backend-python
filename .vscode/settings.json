@@ -1,4 +1,4 @@
 {
-  "cSpell.words": ["prodev"],
+  "cSpell.words": ["prodev", "simplejwt", "viewsets"],
   "editor.defaultFormatter": "ms-python.black-formatter"
 }
