@@ -32,6 +32,9 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
+class LogoutSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField()
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (permissions.AllowAny,)
@@ -39,12 +42,22 @@ class RegisterView(generics.CreateAPIView):
 
 class LogoutView(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = LogoutSerializer
 
     def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         try:
-            refresh_token = request.data["refresh_token"]
+            refresh_token = serializer.validated_data["refresh_token"]
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Successfully logged out."}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        # Handle GET requests by returning a message indicating POST is required
+        return Response(
+            {"detail": "Please use POST method for logout with a refresh token."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
