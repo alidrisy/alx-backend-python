@@ -4,12 +4,18 @@ import uuid
 
 
 class User(AbstractUser):
+    """
+    Custom user model for the messaging app.
+    Extends Django's AbstractUser to allow for future customization.
+    """
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15, blank=True)
+    bio = models.TextField(max_length=500, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def __str__(self):
         return self.username

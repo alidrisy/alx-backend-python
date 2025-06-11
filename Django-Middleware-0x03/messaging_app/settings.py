@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    'chats'
+    "chats",
 ]
 
 MIDDLEWARE = [
@@ -49,9 +49,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "chats.middleware.RequestLoggingMiddleware",
 ]
 
-AUTH_USER_MODEL = 'chats.User'
+AUTH_USER_MODEL = "chats.User"
 
 ROOT_URLCONF = "messaging_app.urls"
 
