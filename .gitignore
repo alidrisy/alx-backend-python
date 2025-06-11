@@ -3,6 +3,3 @@ __pycache__/
 user_data.csv
 *.sql
 *.db
-*.sqlite3
-venv/*
-venv/

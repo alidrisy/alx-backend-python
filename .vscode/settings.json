@@ -1,7 +1,11 @@
 {
+<<<<<<< HEAD
   "cSpell.words": [
     "prodev",
     "venv"
   ],
+=======
+  "cSpell.words": ["prodev", "simplejwt", "viewsets"],
+>>>>>>> c34c64b85b137e742bf27cc67fdde05ee580eb06
   "editor.defaultFormatter": "ms-python.black-formatter"
 }
