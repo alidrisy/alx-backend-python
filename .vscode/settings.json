@@ -1,4 +1,7 @@
 {
-  "cSpell.words": ["prodev"],
+  "cSpell.words": [
+    "prodev",
+    "venv"
+  ],
   "editor.defaultFormatter": "ms-python.black-formatter"
 }
