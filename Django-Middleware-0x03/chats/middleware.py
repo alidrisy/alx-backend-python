@@ -78,3 +78,14 @@ class OffensiveLanguageMiddleware:
         else:
             ip = request.META.get("REMOTE_ADDR")
         return ip
+
+
+class RolepermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if not (request.user.is_staff or request.user.is_superuser):
+            return HttpResponseForbidden("Access denied.")
+        response = self.get_response(request)
+        return response
