@@ -35,11 +35,14 @@ class IsParticipantOfConversation(permissions.BasePermission):
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        # First check if user is a participant
+        # For Conversation objects
         if isinstance(obj, Conversation):
-            is_participant = request.user in [obj.sender, obj.recipient]
-        else:  # Message object
-            is_participant = request.user in [obj.conversation.sender, obj.conversation.recipient]
+            is_participant = request.user in obj.participants.all()
+        # For Message objects
+        elif isinstance(obj, Message):
+            is_participant = request.user in obj.conversation.participants.all()
+        else:
+            return False
 
         if not is_participant:
             return False

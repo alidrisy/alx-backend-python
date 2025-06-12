@@ -20,9 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     sender = UserSerializer(read_only=True)
-    time_since_sent = (
-        serializers.SerializerMethodField()
-    )  # ✅ Use of SerializerMethodField
+    time_since_sent = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
@@ -35,12 +33,12 @@ class MessageSerializer(serializers.ModelSerializer):
         ]
 
     def get_time_since_sent(self, obj):
-        return timesince(obj.sent_at) + " ago"
+        return timesince(obj.sent_at)
 
 
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
-    messages = MessageSerializer(many=True, read_only=True, source="messages")
+    messages = MessageSerializer(many=True, read_only=True)
     title = serializers.CharField(required=True)
 
     class Meta:

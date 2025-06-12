@@ -6,10 +6,14 @@ from rest_framework_nested.routers import (
 from .views import ConversationViewSet, MessageViewSet
 
 router = routers.DefaultRouter()
-router.register(r"conversations", ConversationViewSet, basename="conversation")
+router.register(r"chats/conversation", ConversationViewSet, basename="conversation")
 
-nested_router = NestedDefaultRouter(router, r"conversations", lookup="conversation")
-nested_router.register(r"messages", MessageViewSet, basename="conversation-messages")
+nested_router = NestedDefaultRouter(
+    router, r"chats/conversation", lookup="conversation"
+)
+nested_router.register(
+    r"chats/conversation/messages", MessageViewSet, basename="conversation-messages"
+)
 
 urlpatterns = [
     path("", include(router.urls)),
