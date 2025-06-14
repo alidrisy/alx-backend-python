@@ -16,6 +16,7 @@ def delete_user(request):
     return redirect("profile")
 
 
+@cache_page(60)
 @login_required
 def user_messages_threaded(request):
     messages = (
