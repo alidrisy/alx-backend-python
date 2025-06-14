@@ -6,4 +6,3 @@ user_data.csv
 *.sqlite3
 venv/*
 venv/
-test*
