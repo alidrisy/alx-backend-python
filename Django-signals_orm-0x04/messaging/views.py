@@ -8,8 +8,8 @@ from django.contrib import messages
 def delete_user(request):
     if request.method == "POST":
         user = request.user
-        logout(request)  # تسجيل الخروج قبل الحذف
+        logout(request)
         user.delete()
         messages.success(request, "تم حذف حسابك بنجاح.")
-        return redirect("home")  # غيّر هذا إلى اسم صفحتك الرئيسية
-    return redirect("profile")  # إذا جاء المستخدم عبر GET
+        return redirect("home")
+    return redirect("profile")

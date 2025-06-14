@@ -36,5 +36,4 @@ def delete_related_messages_and_notifications(sender, instance, **kwargs):
     messages_sent.delete()
     messages_received.delete()
 
-    Notification.objects.filter(sender=instance).delete()
-    Notification.objects.filter(receiver=instance).delete()
+    Notification.objects.filter(user=instance).delete()
