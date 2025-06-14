@@ -1,6 +1,6 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
-from .models import Message, MessageHistory, Notification
+from .models import Message, MessageHistory, Notification, User
 
 
 @receiver(pre_save, sender=Message)
@@ -23,3 +23,18 @@ def save_old_content_to_history(sender, instance, **kwargs):
 def create_notification_on_message(sender, instance, created, **kwargs):
     if created:
         Notification.objects.create(user=instance.receiver, message=instance)
+
+
+@receiver(post_delete, sender=User)
+def delete_related_messages_and_notifications(sender, instance, **kwargs):
+    messages_sent = Message.objects.filter(sender=instance)
+    messages_received = Message.objects.filter(receiver=instance)
+
+    for message in messages_sent | messages_received:
+        MessageHistory.objects.filter(message=message).delete()
+
+    messages_sent.delete()
+    messages_received.delete()
+
+    Notification.objects.filter(sender=instance).delete()
+    Notification.objects.filter(receiver=instance).delete()
