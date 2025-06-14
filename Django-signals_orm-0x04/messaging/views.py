@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.views.decorators.cache import cache_page
 
 
 @login_required
@@ -46,6 +47,7 @@ def user_messages_threaded(request):
     )
 
 
+@cache_page(60)
 @login_required
 def unread_messages_view(request):
     unread_messages = (
