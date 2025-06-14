@@ -28,7 +28,7 @@ class Message(models.Model):
         related_name="messages_edited",
     )
     objects = models.Manager()
-    unread_messages = UnreadMessagesManager()
+    unread = UnreadMessagesManager()
 
     def __str__(self):
         return (
