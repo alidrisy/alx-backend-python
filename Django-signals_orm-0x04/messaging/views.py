@@ -44,3 +44,17 @@ def user_messages_threaded(request):
             "threaded_messages": threaded_messages,
         },
     )
+
+
+@login_required
+def unread_messages_view(request):
+    unread_messages = Message.unread_messages.unread_for_user(
+        request.user
+    ).select_related("sender")
+    return render(
+        request,
+        "messaging/unread_messages.html",
+        {
+            "unread_messages": unread_messages,
+        },
+    )
