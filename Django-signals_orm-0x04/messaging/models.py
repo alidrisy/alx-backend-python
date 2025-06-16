@@ -16,7 +16,7 @@ class Message(models.Model):
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies"
     )
     content = models.TextField()
-    sent_at = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
     read = models.BooleanField(default=False)
     edited_at = models.DateTimeField(null=True, blank=True)
