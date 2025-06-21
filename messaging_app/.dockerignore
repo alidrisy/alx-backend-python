@@ -1,0 +1,8 @@
+__pycache__/
+*main.py
+user_data.csv
+*.sql
+*.db
+*.sqlite3
+venv/*
+venv/
