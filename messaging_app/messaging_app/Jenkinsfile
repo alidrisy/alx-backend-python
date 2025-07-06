@@ -14,8 +14,8 @@ pipeline {
         }
 
         stage('Git Branch Info') {
-            steps {
-                sh 'git rev-parse --abbrev-ref HEAD'
+           steps {
+                sh 'git branch'
             }
         }
 
