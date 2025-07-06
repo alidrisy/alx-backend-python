@@ -3,13 +3,19 @@ pipeline {
 
     environment {
         VENV = 'venv'
-        DJANGO_SETTINGS_MODULE = 'messaging_app.settings'  
+        DJANGO_SETTINGS_MODULE = 'messaging_app.settings'
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git credentialsId: 'github-creds', url: 'https://github.com/alidrisy/alx-backend-python.git'
+            }
+        }
+
+        stage('Git Branch Info') {
+            steps {
+                sh 'git rev-parse --abbrev-ref HEAD'
             }
         }
 
