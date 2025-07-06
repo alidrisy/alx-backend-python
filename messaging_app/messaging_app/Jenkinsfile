@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Setup Environment') {
+        stage('Setup Python Environment') {
             steps {
                 dir('messaging_app') {
                     sh 'python3 -m venv $VENV'
@@ -45,7 +45,7 @@ pipeline {
             }
         }
 
-        stage('Publish Test Results') {
+        stage('Publish Report') {
             steps {
                 junit 'messaging_app/test-results/results.xml'
             }
